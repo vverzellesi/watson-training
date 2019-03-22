@@ -50,17 +50,58 @@ app.post('/api/watson', function (req, res) {
     processChatMessage(req, res);
 });
 
+app.post('/api/google', function (req, res) {
+    if (req.body.conversation.type === 'NEW')
+        req.body.inputs[0].rawInputs[0].query = '';
+
+    req.body.context = JSON.parse(req.body.conversation.conversationToken || '{}');
+    req.body.text = req.body.inputs[0].rawInputs[0].query
+
+
+    chatbot.sendMessage(req, async function (err, response) {
+        if (err) {
+            console.log("Error in sending message: ", err);
+            res.status(err.code || 500).json(err);
+        } else {
+            const googleIntent = req.body.inputs[0].intent;
+            const resp = {
+                expectUserResponse: googleIntent !== 'actions.intent.CANCEL',
+            };
+            const richResponse = {
+                items: response.output.text.map(x => ({
+                    simpleResponse: {
+                        ssml: x,
+                        displayText: x,
+                    }
+                })),
+            };
+            const inputs = [{
+                inputPrompt: { richInitialPrompt: richResponse },
+                possibleIntents: [{ intent: 'actions.intent.TEXT' }],
+            }];
+
+            if (resp.expectUserResponse) {
+                resp.expectedInputs = inputs;
+            } else {
+                resp.finalResponse = { richResponse };
+            }
+            resp.conversationToken = JSON.stringify(response.context);
+
+            res.json(resp);
+        }
+    })
+});
+
 function processChatMessage(req, res) {
     chatbot.sendMessage(req, async function (err, response) {
         if (err) {
             console.log("Error in sending message: ", err);
             res.status(err.code || 500).json(err);
-        }
-        else {
+        } else {
             // tratamentos de output
             if ('busca_hotel' in response.output) {
                 const hoteis = await buscaHotel();
-                let listaHoteis = JSON.parse(hoteis).filter(x => x.cidade === response.context.destino);
+                let listaHoteis = JSON.parse(hoteis).filter(x => x.cidade === resfponse.context.destino);
                 let nome_hoteis = listaHoteis.map(x => x.nome);
 
                 if (listaHoteis.length > 0) {

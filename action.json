@@ -1,0 +1,32 @@
+{
+    "locale": "pt-BR",
+    "actions": [
+        {
+            "description": "Assistente de Viagem - Google Assistant",
+            "name": "MAIN",
+            "fulfillment": {
+                "conversationName": "Orquestrador"
+            },
+            "intent": {
+                "name": "actions.intent.MAIN",
+                "trigger": {
+                    "queryPatterns": [
+                        "Quero falar com a assistente de viagem"
+                    ]
+                }
+            }
+        }
+    ],
+    "conversations": {
+        "Watson": {
+            "name": "Orquestrador",
+            "url": "https://f64ee826.ngrok.io/api/google",
+            "fulfillmentApiVersion": 2,
+            "in_dialog_intents": [
+                {
+                    "name": "actions.intent.CANCEL"
+                }
+            ]
+        }
+    }
+}
