@@ -110,7 +110,7 @@ async function validateContext(context, output) {
     if ('busca_hotel' in output) {
         const hoteis = await buscaHotel();
         let listaHoteis = JSON.parse(hoteis).filter(x => x.cidade === context.destino);
-        let nome_hoteis = listaHoteis.map(x => x.nome);
+        let nome_hoteis = listaHoteis.map(x => x.nome.toLowerCase());
 
         if (listaHoteis.length > 0) {
             context.lista_hoteis = listaHoteis;
