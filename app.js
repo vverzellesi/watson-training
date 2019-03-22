@@ -47,7 +47,18 @@ if ('development' == app.get('env')) {
 app.get('/', routes.chat);
 
 app.post('/api/watson', function (req, res) {
-    processChatMessage(req, res);
+    chatbot.sendMessage(req, async function (err, response) {
+        if (err) {
+            console.log("Error in sending message: ", err);
+            res.status(err.code || 500).json(err);
+        } else {
+            // tratamentos de contexto
+            const newContext = await validateContext(response.context, response.output);
+            response.context = newContext;
+
+            res.status(200).json(response);
+        }
+    });
 });
 
 app.post('/api/google', function (req, res) {
@@ -56,7 +67,6 @@ app.post('/api/google', function (req, res) {
 
     req.body.context = JSON.parse(req.body.conversation.conversationToken || '{}');
     req.body.text = req.body.inputs[0].rawInputs[0].query
-
 
     chatbot.sendMessage(req, async function (err, response) {
         if (err) {
@@ -87,55 +97,52 @@ app.post('/api/google', function (req, res) {
             }
             resp.conversationToken = JSON.stringify(response.context);
 
+            // tratamentos de output
+            const newContext = await validateContext(JSON.parse(resp.conversationToken), response.output);
+            resp.conversationToken = JSON.stringify(newContext);
+
             res.json(resp);
         }
     })
 });
 
-function processChatMessage(req, res) {
-    chatbot.sendMessage(req, async function (err, response) {
-        if (err) {
-            console.log("Error in sending message: ", err);
-            res.status(err.code || 500).json(err);
-        } else {
-            // tratamentos de output
-            if ('busca_hotel' in response.output) {
-                const hoteis = await buscaHotel();
-                let listaHoteis = JSON.parse(hoteis).filter(x => x.cidade === resfponse.context.destino);
-                let nome_hoteis = listaHoteis.map(x => x.nome);
+async function validateContext(context, output) {
+    if ('busca_hotel' in output) {
+        const hoteis = await buscaHotel();
+        let listaHoteis = JSON.parse(hoteis).filter(x => x.cidade === context.destino);
+        let nome_hoteis = listaHoteis.map(x => x.nome);
 
-                if (listaHoteis.length > 0) {
-                    response.context.lista_hoteis = listaHoteis;
-                    response.context.nome_hoteis = nome_hoteis;
-                }
-                else {
-                    response.context.sem_hoteis = true;
-                }
-            }
-
-            if ('busca_voo' in response.output) {
-                const voos = await buscaVoos();
-                let listaVoos = JSON.parse(voos).filter(x =>
-                    x.partida === response.context.partida &&
-                    x.destino === response.context.destino &&
-                    x.classe === response.context.classe &&
-                    x.data === response.context.data
-                );
-                let num_voos = listaVoos.map(x => x.numero);
-
-                if (listaVoos.length > 0) {
-                    response.context.lista_voos = listaVoos;
-                    response.context.num_voos = num_voos;
-                }
-                else {
-                    response.context.sem_voos = true;
-                }
-            }
-
-            res.status(200).json(response);
+        if (listaHoteis.length > 0) {
+            context.lista_hoteis = listaHoteis;
+            context.nome_hoteis = nome_hoteis;
         }
-    });
+        else {
+            context.sem_hoteis = true;
+        }
+    }
+
+    if ('busca_voo' in output) {
+        const voos = await buscaVoos();
+        let listaVoos = JSON.parse(voos).filter(x =>
+            x.partida === context.partida &&
+            x.destino === context.destino &&
+            x.classe === context.classe &&
+            x.data === context.data
+        );
+        let num_voos = listaVoos.map(x => x.numero);
+
+        if (listaVoos.length > 0) {
+            context.lista_voos = listaVoos;
+            context.num_voos = num_voos;
+        }
+        else {
+            context.sem_voos = true;
+        }
+    }
+
+    return context;
 }
+
 
 http.createServer(app).listen(app.get('port'), '0.0.0.0', function () {
     console.log('Express server listening on port ' + app.get('port'));
