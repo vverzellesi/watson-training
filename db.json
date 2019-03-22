@@ -1,0 +1,124 @@
+{
+    "hoteis": [
+        {
+            "id": 1,
+            "cidade": "Rio de Janeiro",
+            "nome": "Ibis Santos Dumont",
+            "preco": 187.00
+        },
+        {
+            "id": 2,
+            "cidade": "Rio de Janeiro",
+            "nome": "Hotel Vila Galé Rio de Janeiro",
+            "preco": 262.00
+        },
+        {
+            "id": 3,
+            "cidade": "Rio de Janeiro",
+            "nome": "Ibis Centro",
+            "preco": 150.00
+        },
+        {
+            "id": 4,
+            "cidade": "Rio de Janeiro",
+            "nome": "Grand Mercure Copacabana",
+            "preco": 150.00
+        },
+        {
+            "id": 5,
+            "cidade": "São Paulo",
+            "nome": "Ibis Paulista",
+            "preco": 356.00
+        },
+        {
+            "id": 6,
+            "cidade": "São Paulo",
+            "nome": "Grand Hyatt",
+            "preco": 920.00
+        },
+        {
+            "id": 7,
+            "cidade": "São Paulo",
+            "nome": "Hilton Morumbi",
+            "preco": 867.00
+        },
+        {
+            "id": 8,
+            "cidade": "São Paulo",
+            "nome": "Ibis Budget",
+            "preco": 253.00
+        }
+    ],
+    "voos": [
+        {
+            "id": 1,
+            "companhia": "Azul",
+            "partida": "São Paulo",
+            "destino": "Rio de Janeiro",
+            "classe": "economica",
+            "data": "2019-03-24",
+            "numero": "4987",
+            "preco": 400.00
+        },
+        {
+            "id": 2,
+            "companhia": "Gol",
+            "partida": "São Paulo",
+            "destino": "Rio de Janeiro",
+            "classe": "economica",
+            "data": "2019-03-24",
+            "numero": "1954",
+            "preco": 370.00
+        },
+        {
+            "id": 3,
+            "companhia": "Latam",
+            "partida": "São Paulo",
+            "destino": "Curitiba",
+            "classe": "economica",
+            "data": "2019-03-24",
+            "numero": "4840",
+            "preco": 230.00
+        },
+        {
+            "id": 4,
+            "companhia": "Azul",
+            "partida": "São Paulo",
+            "destino": "Curitiba",
+            "classe": "economica",
+            "data": "2019-03-25",
+            "numero": "6472",
+            "preco": 199.00
+        },
+        {
+            "id": 5,
+            "companhia": "Gol",
+            "partida": "São Paulo",
+            "destino": "Curitiba",
+            "classe": "economica",
+            "data": "2019-03-25",
+            "numero": "2548",
+            "preco": 430.00
+        },
+        {
+            "id": 6,
+            "companhia": "Azul",
+            "partida": "Campinas",
+            "destino": "Florianópolis",
+            "classe": "economica",
+            "data": "2019-03-30",
+            "numero": "5493",
+            "preco": 350.00
+        },
+        {
+            "id": 6,
+            "companhia": "Latam",
+            "partida": "Campinas",
+            "destino": "Curitiba",
+            "classe": "economica",
+            "data": "2019-03-30",
+            "numero": "4284",
+            "preco": 390.00
+        }
+    ]
+}
